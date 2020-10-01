@@ -1,11 +1,19 @@
-###### by Arnas Bendaravičius_ 09 / 2020
-# OOP Java : Sprint Task No.2
+###### by Arnas Bendaravičius_ 10-01 / 2020
+# OOP Java : Sprint Task No.3
 
 
 ## OBJECT-BASED FILE READING AND WRITING JAVA PROGRAM
 
 ### THE TASK:
-To create an object-oriented program, that would store data into a file, read the data from the file and print it into the CLI.
+To create an object-oriented program, that would use lists to store and manipulate data (i.g. create and fill lists, edit lists, store lists into files, load lists from files, filter lists.
+
+### THE PROGRAM:
+It is an updated version of the program developed in the 2nd Sprint task.
+New functionalities include:
+* 
+* 
+* 
+* 
 
 ### HOW IT WORKS:
 The program consists of several methods, that are called through a switch block, that checks the value of the user input and then calls the according method.
