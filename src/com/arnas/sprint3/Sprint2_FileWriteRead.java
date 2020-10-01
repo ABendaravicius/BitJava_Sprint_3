@@ -1,6 +1,7 @@
-package com.arnas.app;
+package com.arnas.sprint3;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Sprint2_FileWriteRead {
@@ -11,27 +12,63 @@ public class Sprint2_FileWriteRead {
 
         while (choice != 0) {
 
-            // File to write data to / read data from
-            File newFile = new File("./duomenys.csv");
+            // Files to store data in
+            File empData = new File("./data/employees.csv");
+            File visData = new File("./data/visitors.csv");
+
+            // Initialization of ArrayLists for storing data about people
+            // > ArrayList for Employees
+            ArrayList<Person> employees = new ArrayList<>();
+            // > ArrayList for Visitors
+            ArrayList<Person> visitors = new ArrayList<>();
 
             // Input choice output to console
-            System.out.println("> Choose what you want to do:\n" +
-                    "1) Create and write new Employee data.\n" +
-                    "2) Create and write new Visitor data.\n" +
-                    "3) Read data from file.\n" +
+            System.out.println("> WHAT DO YOU WANT TO DO?:\n" +
+                    "1) Create new Employee entry.\n" +
+                    "2) Create new Visitor entry.\n" +
+                    "3) Save data to file.\n" +
+                    "4) Load data from file.\n" +
+                    "5) View and filter data.\n" +
                     "\n" +
                     "0) Quit program.");
             choice = Integer.parseInt(userChoice.nextLine());
 
             switch (choice) {
                 case 1:
-                    newEmployee(newFile); // creates object called: employee
+                    newEmployee(employees); // creates object called: employee . stores it into a list
                     break;
                 case 2:
-                    newVisitor(newFile); // creates object called: visitor
+                    newVisitor(visitors); // creates object called: visitor . stores it into a list
                     break;
                 case 3:
-                    readFile(newFile); // reads data currently stored in the file
+                    writeFile(empData, employees); // writes data currently stored in the employees ArrayList to empData.csv
+                    writeFile(visData, visitors); // writes data currently stored in the visitors ArrayList to visData.csv
+                    break;
+                case 4:
+                    System.out.println("> LOAD DATA FROM FILE:\n" +
+                            "1) Load Employee data.\n" +
+                            "2) Load Visitor data.\n" +
+                            "3) Load ALL data.\n" +
+                            "\n" +
+                            "0) Go back.");
+                    choice = Integer.parseInt(userChoice.nextLine());
+
+                    switch (choice) {
+                        case 1:
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 0:
+                            choice = 1; // Setting the value to (1) to avoid program termination and invalid choice error
+                            break;
+                    }
+
+                    // Load data from files and store into ArrayLists
+                    break;
+                case 5:
+                    // Displays data currently stored in ArrayLists and offers filter options
                     break;
                 case 0: // QUITS
                     break;
@@ -45,7 +82,7 @@ public class Sprint2_FileWriteRead {
 
     }
 
-    static void newEmployee(File file) {
+    static void newEmployee(ArrayList arr) {
         // Collecting console input
         Scanner userInput = new Scanner(System.in);
         System.out.println("> Data about the new employee: ");
@@ -62,10 +99,10 @@ public class Sprint2_FileWriteRead {
 
         Employee employee = new Employee(eName, eLastName, eAge, ePosition, eWorkYears);
 
-        writeFile(file, employee); // Method call to write employee object data to file
+        arr.add(employee); // Stores new employee entry to a list
     }
 
-    static void newVisitor(File file) {
+    static void newVisitor(ArrayList arr) {
         // Collecting console input
         Scanner userInput = new Scanner(System.in);
         System.out.println("> Data about the visitor: ");
@@ -82,7 +119,7 @@ public class Sprint2_FileWriteRead {
 
         Visitor visitor = new Visitor(vName, vLastName, vAge, vIntent, vDuration);
 
-        writeFile(file, visitor); // Method call to write visitor object data to file
+        arr.add(visitor); // Stores new visitor entry to a list
     }
 
     static void readFile(File file) {
@@ -109,12 +146,14 @@ public class Sprint2_FileWriteRead {
         }
     }
 
-    static void writeFile(File file, Person person) { // Write to File method takes in file and object as parameters
+    static void writeFile(File file, ArrayList arr) { // Write to File method . takes in File and ArrayList as parameters
         BufferedWriter bW;
 
         try {
             bW = new BufferedWriter(new FileWriter(file, true));
-            bW.write(person.toString() + "\n");
+            for (Object person : arr) { // Enhanced For loop to iterate through each object stored in the list
+                bW.write(person.toString() + "\n");
+            }
             bW.close();
         } catch (FileNotFoundException e) {
             System.err.println(e.getMessage());

@@ -1,4 +1,4 @@
-package com.arnas.app;
+package com.arnas.sprint3;
 
 public class Visitor extends Person {
     private String visitIntent;

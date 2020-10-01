@@ -1,4 +1,4 @@
-package com.arnas.app;
+package com.arnas.sprint3;
 
 public class Person {
     private String name;
