@@ -1,6 +1,6 @@
 package com.arnas.sprint3;
 
-public class Person {
+public class Person implements Writeable {
     private String name;
     private String lastName;
     private int age;
@@ -9,6 +9,10 @@ public class Person {
         this.name = n;
         this.lastName = ln;
         this.age = age;
+    }
+
+    public Person(){
+
     }
 
     public String getName() {
@@ -42,5 +46,10 @@ public class Person {
     @Override
     public String toString() {
         return name + ", " + lastName + ", age: " + age;
+    }
+
+    @Override
+    public String toFile() {
+        return this.name + ";" + this.lastName + ";" + this.age;
     }
 }

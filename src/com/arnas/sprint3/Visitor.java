@@ -30,4 +30,17 @@ public class Visitor extends Person {
     public String toString() {
         return super.toString() + ", intent of visit: " + visitIntent + ", visiting here for: " + visitDurationMin;
     }
+
+    @Override
+    public String toFile() {
+        return this.getName() + ";" + this.getLastName() + ";" + this.getAge() + ";" + this.visitIntent + ";" + this.visitDurationMin;
+    }
+
+    public boolean equals(Visitor v2) {
+        if (this.getName() == v2.getName() && this.getLastName() == v2.getLastName()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

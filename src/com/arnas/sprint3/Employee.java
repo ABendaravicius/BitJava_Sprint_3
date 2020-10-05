@@ -30,4 +30,9 @@ public class Employee extends Person {
     public String toString() {
         return super.toString() + ", position: " + position + ", working here for: " + workingYears;
     }
+
+    @Override
+    public String toFile() {
+        return this.getName() + ";" + this.getLastName() + ";" + this.getAge() + ";" + this.position + ";" + this.workingYears;
+    }
 }

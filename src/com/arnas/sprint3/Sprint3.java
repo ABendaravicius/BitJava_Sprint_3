@@ -2,25 +2,31 @@ package com.arnas.sprint3;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
-public class Sprint2_FileWriteRead {
+interface Writeable {
+    String toFile();
+}
+
+public class Sprint3{
 
     public static void main(String[] args) {
         Scanner userChoice = new Scanner(System.in);
+
+        // Files to store data in
+        File empData = new File("./data/employees.csv");
+        File visData = new File("./data/visitors.csv");
+
+        // Initialization of ArrayLists for storing data about people
+        // > ArrayList for Employees
+        ArrayList<Employee> employees = new ArrayList<>();
+        // > ArrayList for Visitors
+        ArrayList<Visitor> visitors = new ArrayList<>();
+
         int choice = 9;
 
         while (choice != 0) {
-
-            // Files to store data in
-            File empData = new File("./data/employees.csv");
-            File visData = new File("./data/visitors.csv");
-
-            // Initialization of ArrayLists for storing data about people
-            // > ArrayList for Employees
-            ArrayList<Person> employees = new ArrayList<>();
-            // > ArrayList for Visitors
-            ArrayList<Person> visitors = new ArrayList<>();
 
             // Input choice output to console
             System.out.println("> WHAT DO YOU WANT TO DO?:\n" +
@@ -45,6 +51,7 @@ public class Sprint2_FileWriteRead {
                     writeFile(visData, visitors); // writes data currently stored in the visitors ArrayList to visData.csv
                     break;
                 case 4:
+                    // Load data from files and store into ArrayLists
                     System.out.println("> LOAD DATA FROM FILE:\n" +
                             "1) Load Employee data.\n" +
                             "2) Load Visitor data.\n" +
@@ -55,20 +62,74 @@ public class Sprint2_FileWriteRead {
 
                     switch (choice) {
                         case 1:
+                            loadEmployees(empData,employees);
                             break;
                         case 2:
+                            loadVisitors(visData,visitors);
                             break;
                         case 3:
+                            loadEmployees(empData,employees);
+                            loadVisitors(visData,visitors);
                             break;
                         case 0:
                             choice = 1; // Setting the value to (1) to avoid program termination and invalid choice error
                             break;
                     }
 
-                    // Load data from files and store into ArrayLists
                     break;
                 case 5:
                     // Displays data currently stored in ArrayLists and offers filter options
+                    System.out.println("> Employee data_________________________");
+                    for (Employee e : employees) {
+                        System.out.println(e);
+                    }
+                    System.out.println("> ______________________________________");
+
+                    System.out.println("> Visitor data_________________________");
+                    for (Visitor v : visitors) {
+                        System.out.println(v);
+                    }
+                    System.out.println("> ______________________________________");
+
+                    System.out.println("> VIEW AND FILTER DATA:\n" +
+                            "1) Sort Employees by age ascending.\n" +
+                            "2) Sort Visitors by visit time descending.\n" +
+                            "3) Filter unique visitors.\n" +
+                            "\n" +
+                            "0) Go back.");
+                    choice = Integer.parseInt(userChoice.nextLine());
+
+                    switch (choice) {
+                        case 1:
+
+                            System.out.println("> Employee data_________________________");
+                            for (Employee e : employees) {
+                                System.out.println(e);
+                            }
+                            System.out.println("> ______________________________________");
+                            break;
+                        case 2:
+
+                            System.out.println("> Visitor data_________________________");
+                            for (Visitor v : visitors) {
+                                System.out.println(v);
+                            }
+                            System.out.println("> ______________________________________");
+                            break;
+                        case 3:
+                            for (Visitor v : visitors)
+
+                            System.out.println("> Visitor data_________________________");
+                            for (Visitor v : visitors) {
+                                System.out.println(v);
+                            }
+                            System.out.println("> ______________________________________");
+                            break;
+                        case 0:
+                            choice = 1; // Setting the value to (1) to avoid program termination and invalid choice error
+                            break;
+                    }
+
                     break;
                 case 0: // QUITS
                     break;
@@ -122,8 +183,8 @@ public class Sprint2_FileWriteRead {
         arr.add(visitor); // Stores new visitor entry to a list
     }
 
-    static void readFile(File file) {
-        System.out.println("> Reading data from file... ---");
+    static void loadEmployees(File file, ArrayList arr) {
+        System.out.println("> Reading employee data from file... ---");
 
         BufferedReader bR;
 
@@ -134,10 +195,38 @@ public class Sprint2_FileWriteRead {
                 System.err.println("> File is currently empty. ---");
             } else {
                 while (fileLine != null) {
-                    System.out.println(fileLine);
+                    String[] fileLineAsArray = fileLine.split(";");
+                    Employee emp = new Employee(fileLineAsArray[0], fileLineAsArray[1], Integer.parseInt(fileLineAsArray[2]), fileLineAsArray[3], Double.parseDouble(fileLineAsArray[4]));
+                    arr.add(emp);
                     fileLine = bR.readLine();
                 }
-                System.out.println("> End of File. ---");
+                System.out.println("> Employee list loaded from file. ---");
+            }
+        } catch (FileNotFoundException e){
+            System.err.println(e.getMessage());
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    static void loadVisitors(File file, ArrayList arr) {
+        System.out.println("> Reading visitor data from file... ---");
+
+        BufferedReader bR;
+
+        try {
+            bR = new BufferedReader(new FileReader(file));
+            String fileLine = bR.readLine();
+            if (fileLine == null) {
+                System.err.println("> File is currently empty. ---");
+            } else {
+                while (fileLine != null) {
+                    String[] fileLineAsArray = fileLine.split(";");
+                    Visitor emp = new Visitor(fileLineAsArray[0], fileLineAsArray[1], Integer.parseInt(fileLineAsArray[2]), fileLineAsArray[3], Integer.parseInt(fileLineAsArray[4]));
+                    arr.add(emp);
+                    fileLine = bR.readLine();
+                }
+                System.out.println("> Visitor list loaded from file. ---");
             }
         } catch (FileNotFoundException e){
             System.err.println(e.getMessage());
@@ -148,11 +237,13 @@ public class Sprint2_FileWriteRead {
 
     static void writeFile(File file, ArrayList arr) { // Write to File method . takes in File and ArrayList as parameters
         BufferedWriter bW;
+        Object person;
 
         try {
             bW = new BufferedWriter(new FileWriter(file, true));
-            for (Object person : arr) { // Enhanced For loop to iterate through each object stored in the list
-                bW.write(person.toString() + "\n");
+            for (int i = 0; i < arr.size();i++) { // For loop to iterate through each object stored in the list
+                person = arr.get(i);
+                bW.write(((Person)person).toFile() + "\n"); // Calling .toFile() on each ArrayList item cast to Person class object
             }
             bW.close();
         } catch (FileNotFoundException e) {
