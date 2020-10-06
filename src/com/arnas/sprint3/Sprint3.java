@@ -1,12 +1,14 @@
 package com.arnas.sprint3;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 interface Writeable {
-    String toFile();
+    public String toFile();
+}
+
+interface Filterable {
+    public boolean isUnique(Filterable o);
 }
 
 public class Sprint3{
@@ -49,6 +51,7 @@ public class Sprint3{
                 case 3:
                     writeFile(empData, employees); // writes data currently stored in the employees ArrayList to empData.csv
                     writeFile(visData, visitors); // writes data currently stored in the visitors ArrayList to visData.csv
+                    System.out.println("> Data saved to file...");
                     break;
                 case 4:
                     // Load data from files and store into ArrayLists
@@ -101,25 +104,37 @@ public class Sprint3{
 
                     switch (choice) {
                         case 1:
+                            Collections.sort(employees, new Comparator() {
+                                @Override
+                                public int compare(Object o1, Object o2) {
+                                    return Integer.compare(((Employee)o1).getAge(), ((Employee)o2).getAge());
+                                }
+                            });
 
-                            System.out.println("> Employee data_________________________");
+                            System.out.println("> Employee data after sorting___________");
                             for (Employee e : employees) {
                                 System.out.println(e);
                             }
                             System.out.println("> ______________________________________");
                             break;
                         case 2:
+                            Collections.sort(visitors, new Comparator() {
+                                @Override
+                                public int compare(Object o1, Object o2) {
+                                    return -1 * Integer.compare(((Visitor)o1).getVisitDurationMin(), ((Visitor)o2).getVisitDurationMin());
+                                }
+                            });
 
-                            System.out.println("> Visitor data_________________________");
+                            System.out.println("> Visitor data after sorting____________");
                             for (Visitor v : visitors) {
                                 System.out.println(v);
                             }
                             System.out.println("> ______________________________________");
                             break;
                         case 3:
-                            for (Visitor v : visitors)
+                            filterUnique(visitors); // Call of method to remove any duplicate visitors
 
-                            System.out.println("> Visitor data_________________________");
+                            System.out.println("> Visitor data after filtering__________");
                             for (Visitor v : visitors) {
                                 System.out.println(v);
                             }
@@ -253,4 +268,23 @@ public class Sprint3{
         }
     }
 
+    static void filterUnique(ArrayList<Visitor> arr) {
+        Visitor currentObj;
+        Visitor checkedObj;
+
+        System.out.println("> Filtering unique entries...");
+
+        for (int i = 0; i < arr.size() - 1; i++) {
+            currentObj = arr.get(i);
+            for (int j = i + 1; j < arr.size(); j++) {
+                checkedObj = arr.get(j);
+                if(currentObj.isUnique(checkedObj)) {
+                    currentObj.setVisitDurationMin(currentObj.getVisitDurationMin() + checkedObj.getVisitDurationMin());
+                    arr.remove(checkedObj);
+                }
+            }
+        }
+
+        System.out.println("> Filtering finished");
+    }
 }

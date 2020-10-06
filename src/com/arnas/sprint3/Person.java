@@ -1,6 +1,6 @@
 package com.arnas.sprint3;
 
-public class Person implements Writeable {
+public class Person implements Writeable, Filterable {
     private String name;
     private String lastName;
     private int age;
@@ -51,5 +51,14 @@ public class Person implements Writeable {
     @Override
     public String toFile() {
         return this.name + ";" + this.lastName + ";" + this.age;
+    }
+
+    @Override
+    public boolean isUnique(Filterable o) {
+        if (this.getName().equals(((Person)o).getName()) && this.getLastName().equals(((Person)o).getLastName())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

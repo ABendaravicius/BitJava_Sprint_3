@@ -1,6 +1,6 @@
 package com.arnas.sprint3;
 
-public class Visitor extends Person {
+public class Visitor extends Person implements Filterable {
     private String visitIntent;
     private int visitDurationMin;
 
@@ -38,6 +38,15 @@ public class Visitor extends Person {
 
     public boolean equals(Visitor v2) {
         if (this.getName() == v2.getName() && this.getLastName() == v2.getLastName()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isUnique(Filterable o) {
+        if (this.getName().equals(((Person)o).getName()) && this.getLastName().equals(((Person)o).getLastName())) {
             return true;
         } else {
             return false;
